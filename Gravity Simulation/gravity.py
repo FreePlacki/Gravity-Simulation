@@ -127,12 +127,14 @@ class Menu():
         while self.run:
             pygame.time.delay(10)
             self.draw()
+            pygame.display.update()
             for ev in pygame.event.get():
                 if ev.type == pygame.QUIT:
                     self.close()
                     pygame.quit()
+                    exit()
 
-                if pygame.key.get_pressed()[pygame.K_m]:
+                if self.run and pygame.key.get_pressed()[pygame.K_m]:
                     self.close()
 
                 if ev.type == pygame.MOUSEBUTTONUP:
@@ -140,8 +142,6 @@ class Menu():
                     for wdg in self.widgets:
                         if not isinstance(wdg, Text):
                             wdg.on_click(pt, ev.button)
-
-            pygame.display.update()
 
     def close(self):
         self.run = False
@@ -206,8 +206,9 @@ class Button():
     def on_click(self, point, button):
         if self.rect.collidepoint(point) and button == 1:
             if self.text == "ADD":
-                save_preset(text_inp_preset.text, planets)
-                add_preset_menu.close()
+                if text_inp_preset.text != "Click to add preset name" and text_inp_preset.text:
+                    save_preset(text_inp_preset.text, planets)
+                    add_preset_menu.close()
 
             elif self.param:
                 self.function(self.param)
@@ -395,7 +396,7 @@ settings_menu.add([button_ok_sett, text_res, button_fullscreen,
 text_title_tut = Text(-1, 30, "Tutorial", 64, (0, 0, 220))
 text_desc_tut = Text(60, 130, "To add a new planet to the system simply click and hold LMB. |The longer you hold the more mass it will gain. |One you happy with the resoult move your cursor(without releasing LMB). |Now you can give it some initial velocity. |A red line connecting the planet and your cursor will appear. |Longer line means more velocity. |That's it. Enjoy. ||Usefull keyboard shortcuts:", 28, (255, 255, 255), True)
 text_shts_tut = Text(
-    60, 500, "LMB - new planet. RMB - lock/unlock a planet. MMB - delete a planet. |c - clear screen. z - delete most recent planet. m - open menu. |s - save to presets", 28, (100, 255, 100), True)
+    60, 500, "LMB - new planet. RMB - lock/unlock a planet. MMB - delete a planet. |c - clear screen. z - delete most recent planet. m - open menu. |s - save to presets. RMB - delete preset(presets menu)", 28, (100, 255, 100), True)
 button_ok_tut = Button(-1, 650, 200, 100, (0, 200, 0),
                        "OK", tutorial_menu.close, None)
 
@@ -416,7 +417,7 @@ button_cancel_preset = Button(-2, 650, 200, 100,
 add_preset_menu.add([text_inp_preset, button_cancel_preset, button_add_preset])
 # --------------------------------
 try:
-    planets = load_preset("preset_1")
+    planets = load_preset("preset1")
 except KeyError:
     planets = []
 main_menu.open_menu()
@@ -427,6 +428,8 @@ while run:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             run = False
+            pygame.quit()
+            exit()
 
         # Open main menu
         if pygame.key.get_pressed()[pygame.K_m]:
