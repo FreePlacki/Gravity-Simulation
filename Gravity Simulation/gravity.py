@@ -6,7 +6,7 @@ pygame.init()
 win = pygame.display.set_mode((1500, 900))
 W_WIDTH, W_HEIGHT = win.get_size()
 pygame.display.set_caption('Gravity Simulation')
-pygame.display.set_icon(pygame.image.load('space_logo-sm.png'))
+pygame.display.set_icon(pygame.image.load('data/space_logo-sm.png'))
 pygame.font.init()
 FONT = pygame.font.SysFont("arial", 34)
 
@@ -315,30 +315,30 @@ class Button_pre(Button):
 
 def save_preset(name, arr):
     try:
-        presets = pickle.load(open("presets.p", "rb"))
+        presets = pickle.load(open("data/presets.p", "rb"))
     except EOFError:
         presets = {}
     presets[name] = arr
-    pickle.dump(presets, open("presets.p", "wb"))
+    pickle.dump(presets, open("data/presets.p", "wb"))
     update_presets()
 
 
 def load_preset(name):
-    presets = pickle.load(open("presets.p", "rb"))
+    presets = pickle.load(open("data/presets.p", "rb"))
     update_presets()
     return presets[name]
 
 
 def delete_preset(name):
-    presets = pickle.load(open("presets.p", "rb"))
+    presets = pickle.load(open("data/presets.p", "rb"))
     del(presets[name])
-    pickle.dump(presets, open("presets.p", "wb"))
+    pickle.dump(presets, open("data/presets.p", "wb"))
     update_presets()
 
 
 def update_presets():
     presets_menu.clear()
-    presets = pickle.load(open("presets.p", "rb"))
+    presets = pickle.load(open("data/presets.p", "rb"))
     for k, n in zip(presets.keys(), range(len(presets.keys()))):
         y = n*150 + 50
         button_preset = Button_pre(-1, y, 600, 100, (0, 0, 200), k, None, None)
